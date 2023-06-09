@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 
-const todoRoutes = require("./router/todo");
+const cardRoutes = require("./router/card");
 require("dotenv").config();
 const cors = require("cors");
 app.use(cors())
@@ -9,7 +9,7 @@ const mongoConnect = require("./config/db");
 mongoConnect();
 app.use(express.json({extended: false}));
 app.get("/", (req,res)=> res.send("server getup running..."));
-app.use("/cards", todoRoutes);
+app.use("/cards", cardRoutes);
 const port = process.env.PORT || 3001;
 
 app.listen(port, ()=>{
