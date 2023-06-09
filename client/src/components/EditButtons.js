@@ -7,7 +7,7 @@ const EditButtons = ({ handleSave, saveLabel, handleDelete, handleCancel }) => (
     <div
       tabIndex="0"
       className="Edit-Button"
-      style={{ backgroundColor: "#5aac44" }}
+      style={{ backgroundColor: "#0000FF" }}
       onClick={handleSave}
     >
       {saveLabel}

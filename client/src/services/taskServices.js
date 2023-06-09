@@ -7,7 +7,7 @@ export function getCards() {
 }
 
 export function addCard(card) {
-    return axios.post(apiUrl+ "/create", card);
+    return axios.post(apiUrl + "/create", card);
 }
 
 export function updateCard(id, card) {

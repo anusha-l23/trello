@@ -1228,7 +1228,7 @@ class ListEditor extends Component {
 
     return (
       <div className="List-Title-Edit" ref={this.ref}>
-        <TextareaAutosize
+        <input
           autoFocus
           className="List-Title-Textarea"
           placeholder="Enter list title..."

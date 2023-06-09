@@ -13,7 +13,6 @@ class List extends Component {
     editingTitle: false,
     title: this.props.list.title,
     addingCard: false,
-    cards: []
   };
 
   
@@ -54,12 +53,11 @@ class List extends Component {
   deleteList = async () => {
     const { listId, list, dispatch } = this.props;
 
-    if (window.confirm("Are you sure to delete this list?")) {
       dispatch({
         type: "DELETE_LIST",
         payload: {listId, cards: list.cards}
       });
-    }
+
   };
   
   // async componentDidMount() {
