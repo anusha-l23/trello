@@ -12,24 +12,6 @@ class ListEditor extends Component {
     }
   };
 
-  handleClick = e => {
-    const node = this.ref.current;
-
-    if (node.contains(e.target)) {
-      return;
-    }
-
-    this.props.onClickOutside();
-  };
-
-  componentDidMount() {
-    document.addEventListener("click", this.handleClick, false);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener("click", this.handleClick, false);
-  }
-
   render() {
     const { title, handleChangeTitle, deleteList } = this.props;
 
