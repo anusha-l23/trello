@@ -2,7 +2,7 @@ import "../styles/List.css";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Droppable, Draggable } from "react-beautiful-dnd";
-//import { addCard } from "../services/taskServices";
+import { getCards, addCard } from "../services/taskServices";
 import Card from "./Card";
 import CardEditor from "./CardEditor";
 import ListEditor from "./ListEditor";
@@ -13,13 +13,14 @@ class List extends Component {
     editingTitle: false,
     title: this.props.list.title,
     addingCard: false,
+    cards: [],
+    card: ""
   };
 
-  
   toggleAddingCard = () =>
     this.setState({ addingCard: !this.state.addingCard });
 
-  addCard = async cardText => {
+  addCard = async (cardText) => {
     const { listId, dispatch } = this.props;
 
     this.toggleAddingCard();
@@ -28,15 +29,14 @@ class List extends Component {
 
     dispatch({
       type: "ADD_CARD",
-      payload: { cardText, cardId, listId }
+      payload: { cardText, cardId, listId },
     });
   };
-
 
   toggleEditingTitle = () =>
     this.setState({ editingTitle: !this.state.editingTitle });
 
-  handleChangeTitle = e => this.setState({ title: e.target.value });
+  handleChangeTitle = (e) => this.setState({ title: e.target.value });
 
   editListTitle = async () => {
     const { listId, dispatch } = this.props;
@@ -46,30 +46,42 @@ class List extends Component {
 
     dispatch({
       type: "CHANGE_LIST_TITLE",
-      payload: { listId, listTitle: title }
+      payload: { listId, listTitle: title },
     });
   };
 
   deleteList = async () => {
     const { listId, list, dispatch } = this.props;
 
-      dispatch({
-        type: "DELETE_LIST",
-        payload: {listId, cards: list.cards}
-      });
-
+    dispatch({
+      type: "DELETE_LIST",
+      payload: { listId, cards: list.cards },
+    });
   };
-  
-  // async componentDidMount() {
-  //   const {cards} = this.list.cards;
-  //   try {
-  //  const {data} = await addCard({card: this.state.title});
-  //    cards.push(data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
 
+  async componentDidMount() {
+    //const {cards} = this.list.cards;
+
+await getCards()
+      .then((res) => {
+console.log(res.data);
+
+
+      })
+      .catch((error) => console.log(error));
+  }
+
+
+  
+  handleAdd = async () => {
+    //const {cards} = this.list.cards;
+
+await addCard(this.card)
+      .then((res) => {
+        this.setState({card: this.state.card})
+      })
+      .catch((error) => console.log(error));
+  }
   render() {
     const { list, index } = this.props;
     const { editingTitle, addingCard, title } = this.state;
@@ -93,8 +105,13 @@ class List extends Component {
                 deleteList={this.deleteList}
               />
             ) : (
-              <div className="List-Title" onClick={this.toggleEditingTitle}>
-                {list.title}
+              <div className="flex">
+                <div className="List-Title" onClick={this.toggleEditingTitle}>
+                  {list.title}
+                </div>
+                <div>
+                <svg className="dots-color" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M12 14a2 2 0 1 0 0-4a2 2 0 0 0 0 4zm-6 0a2 2 0 1 0 0-4a2 2 0 0 0 0 4zm12 0a2 2 0 1 0 0-4a2 2 0 0 0 0 4z"></path></svg>
+                </div>
               </div>
             )}
 
@@ -120,8 +137,26 @@ class List extends Component {
                       adding
                     />
                   ) : (
-                    <div className="Toggle-Add-Card" onClick={this.toggleAddingCard}>
-                      <ion-icon name="add" /> Add a card
+                    <div className="flex">
+                      <div
+                        className="Toggle-Add-Card"
+                        onClick={this.toggleAddingCard}
+                      >
+                        <ion-icon name="add" onClick={this.handleAdd}/> Add a card
+                      </div>
+                      <div className="Add-Card-icon">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="1em"
+                          height="1em"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            fill="currentColor"
+                            d="M5 2h16v12h-2V4H5v16h8v2H3V2h2zm2 4h10v2H7V6zm10 4H7v2h10v-2zM7 14h7v2H7v-2zm13 5h3v2h-3v3h-2v-3h-3v-2h3v-3h2v3z"
+                          ></path>
+                        </svg>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -135,7 +170,7 @@ class List extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  list: state.listsById[ownProps.listId]
+  list: state.listsById[ownProps.listId],
 });
 
 export default connect(mapStateToProps)(List);
